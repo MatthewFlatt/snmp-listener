@@ -40,18 +40,11 @@ namespace ActionLobster
                 return "";
             }
             var parts = _currentAlert.TargetObject.Split('>');
-            if (parts[1].Contains("(local)"))
+            if (parts.Length == 1)
             {
-                return parts[1].Split('\\').First();
+                return parts[0].Contains("(local)") ? parts[0].Split('\\').First() : parts[0].TrimEnd(' ');
             }
-
-            if (parts[0].Contains("(local"))
-            {
-                return parts[0].Split('\\').First();
-            }
-
-            return parts[0].TrimEnd(' ');
-
+            return parts[1].Contains("(local)") ? parts[1].Split('\\').First() : parts[0].TrimEnd(' ');
         }
 
         private string GetPowerShellScript()
