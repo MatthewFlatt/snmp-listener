@@ -10,11 +10,11 @@ namespace ActionLobster
         public string AlertType { get; }
         public string AlertDescription { get; }
         public DateTime EventTime { get; }
-        public string CurrentSeverity { get; }
+        public Severity CurrentSeverity { get; }
         public string TargetObject { get; }
         public string DetailsUrl { get; }
-        public string StatusChangeType { get; }
-        public string PreviousWorstSeverity { get; }
+        public Status StatusChangeType { get; }
+        public Severity PreviousWorstSeverity { get; }
         public string MachineName { get; }
         public string ClusterName { get; }
         public string GroupName { get; }
@@ -39,7 +39,7 @@ namespace ActionLobster
                         EventTime = DateTime.Parse(value.Value.ToString());
                         break;
                     case 5:
-                        CurrentSeverity = value.Value.ToString();
+                        CurrentSeverity = StringToSeverity(value.Value.ToString());
                         break;
                     case 6:
                         TargetObject = value.Value.ToString();
@@ -48,10 +48,10 @@ namespace ActionLobster
                         DetailsUrl = value.Value.ToString();
                         break;
                     case 8:
-                        StatusChangeType = value.Value.ToString();
+                        StatusChangeType = StringToStatus(value.Value.ToString());
                         break;
                     case 9:
-                        PreviousWorstSeverity = value.Value.ToString();
+                        PreviousWorstSeverity = StringToSeverity(value.Value.ToString());
                         break;
                     case 10:
                         MachineName = value.Value.ToString();
@@ -77,6 +77,40 @@ namespace ActionLobster
         {
             return
                 $"AlertId : {AlertId}{Environment.NewLine}AlertType : {AlertType}{Environment.NewLine}AlertDescription : {AlertDescription}{Environment.NewLine}EventTime : {EventTime}{Environment.NewLine}CurrentServerity : {CurrentSeverity}{Environment.NewLine}TargetObject : {TargetObject}{Environment.NewLine}DetailsUrl : {DetailsUrl}{Environment.NewLine}StatusChangeType{StatusChangeType}{Environment.NewLine}PreviousWorstSeverity : {PreviousWorstSeverity}{Environment.NewLine}MachineName : {MachineName}{Environment.NewLine}ClusterName : {ClusterName}{Environment.NewLine}GroupName : {GroupName}";
+        }
+
+        public Severity StringToSeverity(string severity)
+        {
+            switch (severity)
+            {
+                case "Unknown":
+                    return Severity.Unknown;
+                case "None":
+                    return Severity.None;
+                case "Low":
+                    return Severity.Low;
+                case "Medium":
+                    return Severity.Medium;
+                case "High":
+                    return Severity.High;
+                default:
+                    return Severity.Unknown;
+            }
+        }
+
+        public Status StringToStatus(string status)
+        {
+            switch (status)
+            {
+                case "Raised":
+                    return Status.Raised;
+                case "Ended":
+                    return Status.Ended;
+                case "Escalated":
+                    return Status.Escalated;
+                default:
+                    return Status.Unknown;
+            }
         }
     }
 }
