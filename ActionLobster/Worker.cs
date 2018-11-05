@@ -49,7 +49,7 @@ namespace ActionLobster
 
         private string GetPowerShellScript()
         {
-            return "";
+            return "ExampleScript.ps1";
         }
 
         private bool GetMachineAlert()
