@@ -11,10 +11,12 @@ namespace ActionLobster
     class Worker
     {
         private BlockingCollection<AlertData> WorkerQueue;
+        private BlockingCollection<AlertData> ActionQueue;
 
-        public Worker(BlockingCollection<AlertData> queue)
+        public Worker(BlockingCollection<AlertData> queue, BlockingCollection<AlertData> actionQueue)
         {
             WorkerQueue = queue;
+            ActionQueue = actionQueue;
         }
 
         public void Start()
@@ -22,10 +24,15 @@ namespace ActionLobster
             while (true)
             {
                 var alert = WorkerQueue.Take();
-                Console.WriteLine("Taken data from queue");
-                Console.WriteLine(alert.AlertType == "Database unavailable"
-                    ? "DATABASE UNAVAILABLE ALERT"
-                    : alert.ToString());
+                Console.WriteLine("WORKER : Taken data from queue");
+                if (alert.AlertType == "Database unavailable")
+                {
+                    Console.WriteLine("WORKER : DATABASE UNAVAILABLE ALERT");
+                }
+                else
+                {
+                    ActionQueue.Add(alert);
+                }       
             }
         }
     }

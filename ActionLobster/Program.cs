@@ -19,16 +19,24 @@ namespace ActionLobster
             Console.WriteLine("ActionLobster V0.0.{0}", version.Build);
             Console.WriteLine("-------------------------");
             
-            // Create Queue
+            // Create Queues
             var alertQueue = new BlockingCollection<AlertData>();
+            var actionQueue = new BlockingCollection<AlertData>();
 
             new Thread(() =>
             {
                 Thread.CurrentThread.IsBackground = true;
-                var worker = new Worker(alertQueue);
+                var worker = new Worker(alertQueue, actionQueue);
                 worker.Start();
             }).Start();
-            
+
+            new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+                var action = new Action(actionQueue);
+                action.Start();
+            }).Start();
+
             //
             // Start listener
             //

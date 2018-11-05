@@ -55,12 +55,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Action.cs" />
     <Compile Include="AlertData.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Severity.cs" />
     <Compile Include="SnmpData.cs" />
     <Compile Include="SnmpListener.cs" />
+    <Compile Include="Status.cs" />
     <Compile Include="VarBindData.cs" />
     <Compile Include="Worker.cs" />
   </ItemGroup>
