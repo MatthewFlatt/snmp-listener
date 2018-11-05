@@ -20,7 +20,7 @@ namespace ActionLobster
             Console.WriteLine("-------------------------");
             
             // Create Queue
-            var alertQueue = new ConcurrentQueue<AlertData>();
+            var alertQueue = new BlockingCollection<AlertData>();
 
             new Thread(() =>
             {
@@ -39,7 +39,7 @@ namespace ActionLobster
                     Console.WriteLine("");
                     Console.WriteLine("Received package from: {0}", data.Sender);
                     Console.WriteLine("Adding to queue");
-                    alertQueue.Enqueue(data.AlertData);
+                    alertQueue.Add(data.AlertData);
                 }
             }
         }

@@ -10,9 +10,9 @@ namespace ActionLobster
 {
     class Worker
     {
-        private ConcurrentQueue<AlertData> WorkerQueue;
+        private BlockingCollection<AlertData> WorkerQueue;
 
-        public Worker(ConcurrentQueue<AlertData> queue)
+        public Worker(BlockingCollection<AlertData> queue)
         {
             WorkerQueue = queue;
         }
@@ -21,21 +21,11 @@ namespace ActionLobster
         {
             while (true)
             {
-                if (!WorkerQueue.TryDequeue(out var alert))
-                {
-                    Thread.Sleep(TimeSpan.FromSeconds(5));
-                    continue;
-                }
+                var alert = WorkerQueue.Take();
                 Console.WriteLine("Taken data from queue");
-                if (alert.AlertType == "Database unavailable")
-                {
-                    Console.WriteLine("DATABASE UNAVAILABLE ALERT");
-                }
-                else
-                {
-                    Console.WriteLine(alert.ToString());
-                }
-                
+                Console.WriteLine(alert.AlertType == "Database unavailable"
+                    ? "DATABASE UNAVAILABLE ALERT"
+                    : alert.ToString());
             }
         }
     }
