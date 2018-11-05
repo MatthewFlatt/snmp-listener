@@ -21,7 +21,7 @@ namespace ActionLobster
             
             // Create Queues
             var alertQueue = new BlockingCollection<AlertData>();
-            var actionQueue = new BlockingCollection<AlertData>();
+            var actionQueue = new BlockingCollection<ActionData>();
 
             new Thread(() =>
             {

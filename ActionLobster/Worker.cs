@@ -10,30 +10,71 @@ namespace ActionLobster
 {
     class Worker
     {
-        private BlockingCollection<AlertData> WorkerQueue;
-        private BlockingCollection<AlertData> ActionQueue;
+        private readonly BlockingCollection<AlertData> _workerQueue;
+        private readonly BlockingCollection<ActionData> _actionQueue;
+        private AlertData _currentAlert;
 
-        public Worker(BlockingCollection<AlertData> queue, BlockingCollection<AlertData> actionQueue)
+        public Worker(BlockingCollection<AlertData> queue, BlockingCollection<ActionData> actionQueue)
         {
-            WorkerQueue = queue;
-            ActionQueue = actionQueue;
+            _workerQueue = queue;
+            _actionQueue = actionQueue;
         }
 
         public void Start()
         {
             while (true)
             {
-                var alert = WorkerQueue.Take();
+                _currentAlert = _workerQueue.Take();
                 Console.WriteLine("WORKER : Taken data from queue");
-                if (alert.AlertType == "Database unavailable")
-                {
-                    Console.WriteLine("WORKER : DATABASE UNAVAILABLE ALERT");
-                }
-                else
-                {
-                    ActionQueue.Add(alert);
-                }       
+                
+                var action = new ActionData(_currentAlert, GetPowerShellScript(), CreateSqlServerConnectionString(),  GetMachineAlert(), GetAdditionalObjects());
+                _actionQueue.Add(action);
+    
             }
+        }
+
+        private string CreateSqlServerConnectionString()
+        {
+            if (GetMachineAlert())
+            {
+                return "";
+            }
+            var parts = _currentAlert.TargetObject.Split('>');
+            if (parts[1].Contains("(local)"))
+            {
+                return parts[1].Split('\\').First();
+            }
+
+            if (parts[0].Contains("(local"))
+            {
+                return parts[0].Split('\\').First();
+            }
+
+            return parts[0].TrimEnd(' ');
+
+        }
+
+        private string GetPowerShellScript()
+        {
+            return "";
+        }
+
+        private bool GetMachineAlert()
+        {
+            return Alerts.MachineAlerts.Contains(_currentAlert.AlertType);
+        }
+
+        private List<string> GetAdditionalObjects()
+        {
+            var objects = new List<string>();
+            foreach (var part in _currentAlert.TargetObject.Split('>').Skip(1))
+            {
+                if (string.IsNullOrWhiteSpace(_currentAlert.MachineName))
+                {
+                    objects.Add(part);
+                }
+            }
+            return objects;
         }
     }
 }
