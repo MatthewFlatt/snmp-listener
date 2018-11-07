@@ -22,13 +22,22 @@ namespace ActionLobster
 
         public void Start()
         {
+            var firstRule = new Rule(new List<string>(), DateTime.Today, DateTime.Today, new List<string>(), new List<string>(), "ExampleScript.ps1");
             while (true)
             {
                 _currentAlert = _workerQueue.Take();
                 Console.WriteLine("WORKER : Taken data from queue");
+                if (firstRule.RuleMatches(_currentAlert.AlertType, _currentAlert.ClusterName, _currentAlert.GroupName,
+                    _currentAlert.EventTime))
+                {
+                    var action = new ActionData(_currentAlert, firstRule.PowerShellScriptFile, CreateSqlServerConnectionString(), GetMachineAlert(), GetAdditionalObjects());
+                    _actionQueue.Add(action);
+                }
+                else
+                {
+                    Console.WriteLine("WORKER : ALERT DID NOT MATCH RULE");
+                }
                 
-                var action = new ActionData(_currentAlert, GetPowerShellScript(), CreateSqlServerConnectionString(),  GetMachineAlert(), GetAdditionalObjects());
-                _actionQueue.Add(action);
     
             }
         }
@@ -51,11 +60,6 @@ namespace ActionLobster
             }
             
             return parts[1].Contains("(local)") ? parts[1].Split('\\').First() : parts[0].TrimEnd(' ');
-        }
-
-        private string GetPowerShellScript()
-        {
-            return "ExampleScript.ps1";
         }
 
         private bool GetMachineAlert()
