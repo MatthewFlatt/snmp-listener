@@ -34,19 +34,25 @@ namespace ActionLobster
                 {
                     Console.WriteLine("ACTION : Property : {0}", property);
                 }
-                PowerShell shell = PowerShell.Create();
-                shell.Commands.AddScript("Set-ExecutionPolicy -ExecutionPolicy ByPass -Scope Process");
-                shell.Commands.AddScript(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, action.ScriptToRun));
-                shell.Commands.AddParameter("SqlServerConnectionString", action.SqlServerConnectionString);
-                
-                if (action.AdditionalObject.Count > 0)
+
+                using (PowerShell shell = PowerShell.Create())
                 {
-                    shell.Commands.AddParameter("ObjectName", action.AdditionalObject.First());
-                }
-                var results = shell.Invoke();
-                foreach (var result in results)
-                {
-                    Console.WriteLine("POWERSHELL : {0}",result.ToString());
+                    var sb = new StringBuilder();
+                    shell.Commands.AddScript("Set-ExecutionPolicy -ExecutionPolicy ByPass -Scope Process -Force");
+                    sb.Append(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, action.ScriptToRun));
+                    sb.Append($" -SqlServerConnectionString \"{action.SqlServerConnectionString}\"");
+
+                    if (action.AdditionalObject.Count > 0)
+                    {
+                        sb.Append($" -ObjectName \"{action.AdditionalObject.First()}\"");
+                    }
+
+                    shell.AddScript(sb.ToString());
+                    shell.Invoke();
+                    foreach (var result in shell.Streams.Information)
+                    {
+                        Console.WriteLine("POWERSHELL : {0}", result);
+                    }
                 }
             }
         }
