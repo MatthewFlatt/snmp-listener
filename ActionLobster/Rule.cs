@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ActionLobster
 {
@@ -14,9 +11,13 @@ namespace ActionLobster
         private List<string> IncludedServers { get; }
         private List<string> IncludedGroups { get; }
         public string PowerShellScriptFile { get; }
+        private Severity MinimumSeverity { get; }
+        public int Priority { get; }
+    
+    
 
         public Rule(List<string> alertType, DateTime actionFrom, DateTime actionTo, List<string> includedServers,
-            List<string> includedGroups, string powerShellScriptFile)
+            List<string> includedGroups, Severity minimumSeverity, int priority, string powerShellScriptFile)
         {
             AlertType = alertType;
             ActionFrom = actionFrom;
@@ -24,6 +25,8 @@ namespace ActionLobster
             IncludedServers = includedServers;
             IncludedGroups = includedGroups;
             PowerShellScriptFile = powerShellScriptFile;
+            MinimumSeverity = minimumSeverity;
+            Priority = priority;
         }
 
         private bool AlertTypeMatches(string alertType)
@@ -47,10 +50,15 @@ namespace ActionLobster
 
         }
 
-        public bool RuleMatches(string alertType, string serverName, string groupName, DateTime alertTime)
+        private bool SeverityMatches(Severity severity)
+        {
+            return severity >= MinimumSeverity;
+        }
+
+        public bool RuleMatches(string alertType, string serverName, string groupName, DateTime alertTime, Severity severity)
         {
             return AlertTypeMatches(alertType) && ServerNameMatches(serverName) && GroupNameMatches(groupName) &&
-                   InTimeRange(alertTime);
+                   InTimeRange(alertTime) && SeverityMatches(severity);
         }
 
 }

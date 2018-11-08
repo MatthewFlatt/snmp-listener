@@ -22,13 +22,13 @@ namespace ActionLobster
 
         public void Start()
         {
-            var firstRule = new Rule(new List<string>(), DateTime.Today, DateTime.Today, new List<string>(), new List<string>(), "ExampleScript.ps1");
+            var firstRule = new Rule(new List<string>(), DateTime.Today, DateTime.Today.AddSeconds(-1), new List<string>(), new List<string>(), Severity.None, 1, "ExampleScript.ps1");
             while (true)
             {
                 _currentAlert = _workerQueue.Take();
                 Console.WriteLine("WORKER : Taken data from queue");
                 if (firstRule.RuleMatches(_currentAlert.AlertType, _currentAlert.ClusterName, _currentAlert.GroupName,
-                    _currentAlert.EventTime))
+                    _currentAlert.EventTime, _currentAlert.CurrentSeverity))
                 {
                     var action = new ActionData(_currentAlert, firstRule.PowerShellScriptFile, CreateSqlServerConnectionString(), GetMachineAlert(), GetAdditionalObjects());
                     _actionQueue.Add(action);
