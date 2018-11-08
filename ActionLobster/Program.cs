@@ -44,8 +44,6 @@ namespace ActionLobster
             while(true) {
                 SnmpData data = listener.Listen();
                 if (data != null) {
-                    Console.WriteLine("");
-                    Console.WriteLine("Received package from: {0}", data.Sender);
                     Console.WriteLine("Adding to queue");
                     alertQueue.Add(data.AlertData);
                 }

@@ -27,7 +27,6 @@ namespace ActionLobster
             while (true)
             {
                 _currentAlert = _workerQueue.Take();
-                Console.WriteLine("WORKER : Taken data from queue");
                 foreach (var rule in _rules)
                 {
                     if (rule.RuleMatches(_currentAlert.AlertType, _currentAlert.ClusterName, _currentAlert.GroupName,
