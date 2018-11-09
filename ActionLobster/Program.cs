@@ -42,10 +42,19 @@ namespace ActionLobster
             //
             var listener = new SnmpListener();
             while(true) {
-                SnmpData data = listener.Listen();
-                if (data != null) {
-                    Console.WriteLine("Adding to queue");
-                    alertQueue.Add(data.AlertData);
+                try
+                {
+                    SnmpData data = listener.Listen();
+                    if (data != null)
+                    {
+                        Console.WriteLine("Adding to queue");
+                        alertQueue.Add(data.AlertData);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error adding trap to queue");
+                    Console.WriteLine(e);
                 }
             }
         }

@@ -5,29 +5,14 @@ namespace ActionLobster
 {
     class Rule
     {
-        private List<string> AlertType { get; }
-        private DateTime ActionFrom { get; }
-        private DateTime ActionTo { get; }
-        private List<string> IncludedServers { get; }
-        private List<string> IncludedGroups { get; }
-        public string PowerShellScriptFile { get; }
-        private Severity MinimumSeverity { get; }
-        public int Priority { get; }
-    
-    
-
-        public Rule(List<string> alertType, DateTime actionFrom, DateTime actionTo, List<string> includedServers,
-            List<string> includedGroups, Severity minimumSeverity, int priority, string powerShellScriptFile)
-        {
-            AlertType = alertType;
-            ActionFrom = actionFrom;
-            ActionTo = actionTo;
-            IncludedServers = includedServers;
-            IncludedGroups = includedGroups;
-            PowerShellScriptFile = powerShellScriptFile;
-            MinimumSeverity = minimumSeverity;
-            Priority = priority;
-        }
+        public List<string> AlertType { get; set; }
+        public DateTime ActionFrom { get; set; }
+        public DateTime ActionTo { get; set; }
+        public List<string> IncludedServers { get; set; }
+        public List<string> IncludedGroups { get; set; }
+        public string PowerShellScriptFile { get; set; }
+        public Severity MinimumSeverity { get; set; }
+        public int Priority { get; set; }
 
         private bool AlertTypeMatches(string alertType)
         {

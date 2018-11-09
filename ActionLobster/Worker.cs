@@ -23,38 +23,64 @@ namespace ActionLobster
 
         public void Start()
         {
-            _rules.Add(new Rule(new List<string>(), DateTime.Today, DateTime.Today.AddSeconds(-1), new List<string>(), new List<string>(), Severity.Low, 1, "ExampleScript.ps1"));
-            _rules.Add(new Rule(new List<string>(), DateTime.Today, DateTime.Today.AddSeconds(-1), new List<string>(), new List<string>(), Severity.Low, 5, "ExampleScript.ps1"));
-            _rules.Add(new Rule(new List<string>(), DateTime.Today, DateTime.Today.AddSeconds(-1), new List<string>(), new List<string>(), Severity.Low, 5, "ExampleScript.ps1"));
+            _rules.Add(new Rule {   AlertType = new List<string>(),
+                                    ActionFrom = DateTime.Today,
+                                    ActionTo = DateTime.Today.AddSeconds(-1),
+                                    IncludedServers = new List<string>(),
+                                    IncludedGroups = new List<string>(),
+                                    MinimumSeverity = Severity.Low,
+                                    Priority = 1,
+                                    PowerShellScriptFile = "ExampleScript.ps1"});
             while (true)
             {
-                _currentAlert = _workerQueue.Take();
-                var matchingRules = new List<Rule>();
-                foreach (var rule in _rules)
+                try
                 {
-                    if (!rule.RuleMatches(_currentAlert.AlertType, _currentAlert.ClusterName, _currentAlert.GroupName,
-                        _currentAlert.EventTime, _currentAlert.CurrentSeverity)) continue;
-                    if (matchingRules.Count == 0)
+                    _currentAlert = _workerQueue.Take();
+                    var matchingRules = new List<Rule>();
+                    foreach (var rule in _rules)
                     {
-                        matchingRules.Add(rule);
-                        continue;
-                    }
-                    if (matchingRules.First().Priority == rule.Priority)
-                    {
-                        matchingRules.Add(rule);
-                        continue;
+                        if (rule.RuleMatches(_currentAlert.AlertType, _currentAlert.ClusterName,
+                            _currentAlert.GroupName,
+                            _currentAlert.EventTime, _currentAlert.CurrentSeverity))
+                        {
+                            if (matchingRules.Count == 0)
+                            {
+                                matchingRules.Add(rule);
+                            }
+                            else
+                            {
+                                if (matchingRules.First().Priority == rule.Priority)
+                                {
+                                    matchingRules.Add(rule);
+                                }
+                                else
+                                {
+                                    if (matchingRules.First().Priority < rule.Priority)
+                                    {
+                                        matchingRules.Clear();
+                                        matchingRules.Add(rule);
+                                    }
+                                } 
+                            }   
+                        }
                     }
 
-                    if (matchingRules.First().Priority >= rule.Priority) continue;
-                    matchingRules.Clear();
-                    matchingRules.Add(rule);
+                    foreach (var matchingRule in matchingRules)
+                    {
+                        _actionQueue.Add(new ActionData {   AlertForAction = _currentAlert,
+                                                            ScriptToRun = matchingRule.PowerShellScriptFile,
+                                                            SqlServerConnectionString = CreateSqlServerConnectionString(),
+                                                            MachineAlert = GetMachineAlert(),
+                                                            AdditionalObject = GetAdditionalObjects()
+                        });
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("An exception occurred and the alert was dropped");
+                    Console.WriteLine(e);
                 }
 
-                foreach (var matchingRule in matchingRules)
-                {
-                    _actionQueue.Add(new ActionData(_currentAlert, matchingRule.PowerShellScriptFile, CreateSqlServerConnectionString(), GetMachineAlert(), GetAdditionalObjects()));
-                }
-    
             }
         }
 

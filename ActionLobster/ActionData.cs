@@ -8,20 +8,11 @@ namespace ActionLobster
 {
     class ActionData
     {
-        public AlertData AlertForAction { get; }
-        public string ScriptToRun { get; }
-        public string SqlServerConnectionString { get; }
-        public bool MachineAlert { get; }
+        public AlertData AlertForAction { get; set; }
+        public string ScriptToRun { get; set; }
+        public string SqlServerConnectionString { get; set; }
+        public bool MachineAlert { get; set; }
         // Database name, job name, disk letter etc
-        public List<string> AdditionalObject { get; }
-
-        public ActionData(AlertData alert, string script, string sqlServer, bool machineAlert, List<string> additionalObject)
-        {
-            AlertForAction = alert;
-            ScriptToRun = script;
-            SqlServerConnectionString = sqlServer;
-            MachineAlert = machineAlert;
-            AdditionalObject = additionalObject;
-        }
+        public List<string> AdditionalObject { get; set; }
     }
 }
