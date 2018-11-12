@@ -1,6 +1,7 @@
 ﻿using SnmpSharpNet;
 using System;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 
@@ -22,11 +23,15 @@ namespace ActionLobster
             // Create Queues
             var alertQueue = new BlockingCollection<AlertData>();
             var actionQueue = new BlockingCollection<ActionData>();
+            var jsonRules =
+                File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ExampleRules.json"));
+            var rules = new RulesList();
+            rules.UpdateRules(jsonRules);
 
             new Thread(() =>
             {
                 Thread.CurrentThread.IsBackground = true;
-                var worker = new Worker(alertQueue, actionQueue);
+                var worker = new Worker(alertQueue, actionQueue, rules);
                 worker.Start();
             }).Start();
 

@@ -16,22 +16,22 @@ namespace ActionLobster
 
         private bool AlertTypeMatches(string alertType)
         {
-            return AlertType.Count == 0 || AlertType.Contains(alertType);
+            return AlertType == null || AlertType.Count == 0 || AlertType.Contains(alertType);
         }
 
         private bool ServerNameMatches(string serverName)
         {
-            return IncludedServers.Count == 0 || IncludedServers.Contains(serverName);
+            return IncludedServers == null || IncludedServers.Count == 0 || IncludedServers.Contains(serverName);
         }
 
         private bool GroupNameMatches(string groupName)
         {
-            return IncludedGroups.Count == 0 || IncludedGroups.Contains(groupName);
+            return IncludedGroups == null || IncludedGroups.Count == 0 || IncludedGroups.Contains(groupName);
         }
 
         private bool InTimeRange(DateTime alertTime)
         {
-            return alertTime.TimeOfDay > ActionFrom.TimeOfDay && alertTime.TimeOfDay < ActionTo.TimeOfDay;
+            return ActionFrom.Equals(ActionTo) || alertTime.TimeOfDay > ActionFrom.TimeOfDay && alertTime.TimeOfDay < ActionTo.TimeOfDay;
 
         }
 

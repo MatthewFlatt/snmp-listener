@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -13,57 +14,24 @@ namespace ActionLobster
         private readonly BlockingCollection<AlertData> _workerQueue;
         private readonly BlockingCollection<ActionData> _actionQueue;
         private AlertData _currentAlert;
-        private readonly List<Rule> _rules = new List<Rule>();
+        private readonly RulesList _rules;
 
-        public Worker(BlockingCollection<AlertData> queue, BlockingCollection<ActionData> actionQueue)
+        public Worker(BlockingCollection<AlertData> queue, BlockingCollection<ActionData> actionQueue, RulesList rules)
         {
             _workerQueue = queue;
             _actionQueue = actionQueue;
+            _rules = rules;
         }
 
         public void Start()
         {
-            _rules.Add(new Rule {   AlertType = new List<string>(),
-                                    ActionFrom = DateTime.Today,
-                                    ActionTo = DateTime.Today.AddSeconds(-1),
-                                    IncludedServers = new List<string>(),
-                                    IncludedGroups = new List<string>(),
-                                    MinimumSeverity = Severity.Low,
-                                    Priority = 1,
-                                    PowerShellScriptFile = "ExampleScript.ps1"});
             while (true)
             {
                 try
                 {
                     _currentAlert = _workerQueue.Take();
-                    var matchingRules = new List<Rule>();
-                    foreach (var rule in _rules)
-                    {
-                        if (rule.RuleMatches(_currentAlert.AlertType, _currentAlert.ClusterName,
-                            _currentAlert.GroupName,
-                            _currentAlert.EventTime, _currentAlert.CurrentSeverity))
-                        {
-                            if (matchingRules.Count == 0)
-                            {
-                                matchingRules.Add(rule);
-                            }
-                            else
-                            {
-                                if (matchingRules.First().Priority == rule.Priority)
-                                {
-                                    matchingRules.Add(rule);
-                                }
-                                else
-                                {
-                                    if (matchingRules.First().Priority < rule.Priority)
-                                    {
-                                        matchingRules.Clear();
-                                        matchingRules.Add(rule);
-                                    }
-                                } 
-                            }   
-                        }
-                    }
+                    var matchingRules = _rules.GetMatchingRules(_currentAlert);
+                    
 
                     foreach (var matchingRule in matchingRules)
                     {
