@@ -23,8 +23,18 @@ namespace ActionLobster
             // Create Queues
             var alertQueue = new BlockingCollection<AlertData>();
             var actionQueue = new BlockingCollection<ActionData>();
-            var jsonRules =
-                File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ExampleRules.json"));
+            var jsonRules = "";
+            try
+            {
+                jsonRules =
+                    File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ExampleRules.json"));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error reading rules from file");
+                Console.WriteLine(e);
+            }
+            
             var rules = new RulesList();
             rules.UpdateRules(jsonRules);
 
