@@ -1,0 +1,17 @@
+[{
+      "Priority": 1,
+      "PowerShellScriptFile": "ExampleScript.ps1"
+    },
+    {
+      "AlertType": [
+        "Backup overdue"
+      ],
+      "ActionFrom": "08:00",
+      "ActionTo": "18:00",
+      "IncludedServers": [],
+      "IncludedGroups": [],
+      "MinimumSeverity": "Low",
+      "Priority": 1,
+      "PowerShellScriptFile": "ExampleScript.ps1"
+    }
+  ]
