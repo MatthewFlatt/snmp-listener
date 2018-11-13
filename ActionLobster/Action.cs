@@ -42,6 +42,18 @@ namespace ActionLobster
                         var sb = new StringBuilder();
                         shell.Commands.AddScript("Set-ExecutionPolicy -ExecutionPolicy ByPass -Scope Process -Force");
                         sb.Append(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, action.ScriptToRun));
+                        sb.Append($" -AlertId \"{action.AlertForAction.AlertId}\"");
+                        sb.Append($" -AlertType \"{action.AlertForAction.AlertType}\"");
+                        sb.Append($" -AlertDescription \"{action.AlertForAction.AlertDescription}\"");
+                        sb.Append($" -EventTime \"{action.AlertForAction.EventTime}\"");
+                        sb.Append($" -CurrentSeverity \"{action.AlertForAction.CurrentSeverity}\"");
+                        sb.Append($" -TargetObject \"{action.AlertForAction.TargetObject}\"");
+                        sb.Append($" -DetailsUrl \"{action.AlertForAction.DetailsUrl}\"");
+                        sb.Append($" -StatusChangeType \"{action.AlertForAction.StatusChangeType}\"");
+                        sb.Append($" -PreviousWorstSeverity \"{action.AlertForAction.PreviousWorstSeverity}\"");
+                        sb.Append($" -MachineName \"{action.AlertForAction.MachineName}\"");
+                        sb.Append($" -ClusterName \"{action.AlertForAction.ClusterName}\"");
+                        sb.Append($" -GroupName \"{action.AlertForAction.GroupName}\"");
                         sb.Append($" -SqlServerConnectionString \"{action.SqlServerConnectionString}\"");
 
                         if (action.AdditionalObject.Count > 0)
