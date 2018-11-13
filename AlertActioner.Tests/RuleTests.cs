@@ -1,14 +1,96 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace AlertActioner.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class RuleTests
     {
-        [TestMethod]
-        public void TestMethod1()
+        [Test]
+        public void AlertTypeMatchTests()
         {
+            var ruleToTest = new Rule {AlertType = new List<string>()};
+            // No rule specified should return true
+            Assert.IsTrue(ruleToTest.AlertTypeMatches("Database unavailable"));
+
+            // Matches types in rule
+            ruleToTest.AlertType = new List<string> {"Database unavailable", "Job Failed"};
+            Assert.IsTrue(ruleToTest.AlertTypeMatches("Database unavailable"));
+            Assert.IsTrue(ruleToTest.AlertTypeMatches("Job failed"));
+
+            // Does not match
+            Assert.IsFalse(ruleToTest.AlertTypeMatches("Job duration unusual"));
         }
+
+        [Test]
+        public void ServerNameMatchTests()
+        {
+            var ruleToTest = new Rule { IncludedServers = new List<string>() };
+            // No rule specified should return true
+            Assert.IsTrue(ruleToTest.ServerNameMatches("server1"));
+
+            // Matches servers in rule
+            ruleToTest.AlertType = new List<string> { "server1", "server3" };
+            Assert.IsTrue(ruleToTest.ServerNameMatches("server1"));
+            Assert.IsTrue(ruleToTest.ServerNameMatches("server3"));
+
+            // Does not match
+            Assert.IsFalse(ruleToTest.ServerNameMatches("server2"));
+        }
+
+        [Test]
+        public void GroupNameMatchTests()
+        {
+            var ruleToTest = new Rule { IncludedGroups = new List<string>() };
+            // No rule specified should return true
+            Assert.IsTrue(ruleToTest.GroupNameMatches("group1"));
+
+            // Matches types in rule
+            ruleToTest.AlertType = new List<string> { "group1", "group3" };
+            Assert.IsTrue(ruleToTest.GroupNameMatches("group1"));
+            Assert.IsTrue(ruleToTest.GroupNameMatches("group3"));
+
+            // Does not match
+            Assert.IsFalse(ruleToTest.GroupNameMatches("group2"));
+        }
+
+        [Test]
+        public void TimeRangeMatchTests()
+        {
+            var ruleToTest = new Rule
+            {
+                ActionFrom = DateTime.MinValue,
+                ActionTo = DateTime.MinValue
+            };
+            // Times match so return true
+            Assert.IsTrue(ruleToTest.InTimeRange(DateTime.Now));
+
+            // In time range (dates ignored)
+            ruleToTest.ActionFrom = new DateTime(2018, 11, 1, 9, 0, 0);
+            ruleToTest.ActionTo = new DateTime(2019, 11, 1, 17, 0, 0);
+            Assert.IsTrue(ruleToTest.InTimeRange(new DateTime(2020, 11, 1, 12, 0, 0)));
+
+            // Does not match
+            Assert.IsFalse(ruleToTest.InTimeRange(new DateTime(2020, 11, 1, 8, 0, 0)));
+            Assert.IsFalse(ruleToTest.InTimeRange(new DateTime(2020, 11, 1, 18, 0, 0)));
+        }
+
+        [Test]
+        public void SeverityMatchTests()
+        {
+            var ruleToTest = new Rule { };
+            // No rule specified should return true
+            Assert.IsTrue(ruleToTest.SeverityMatches(Severity.Unknown));
+
+            // Matches types in rule
+            ruleToTest.MinimumSeverity = Severity.Medium;
+            Assert.IsTrue(ruleToTest.SeverityMatches(Severity.Medium));
+            Assert.IsTrue(ruleToTest.SeverityMatches(Severity.High));
+
+            // Does not match
+            Assert.IsFalse(ruleToTest.SeverityMatches(Severity.Low));
+        }
+
     }
 }

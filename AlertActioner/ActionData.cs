@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AlertActioner
 {
-    class ActionData
+    public class ActionData
     {
         public AlertData AlertForAction { get; set; }
         public string ScriptToRun { get; set; }

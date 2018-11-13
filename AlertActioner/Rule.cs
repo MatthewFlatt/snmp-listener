@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AlertActioner
 {
-    class Rule
+    public class Rule
     {
         public List<string> AlertType { get; set; }
         public DateTime ActionFrom { get; set; }
@@ -14,28 +14,28 @@ namespace AlertActioner
         public Severity MinimumSeverity { get; set; }
         public int Priority { get; set; }
 
-        private bool AlertTypeMatches(string alertType)
+        public bool AlertTypeMatches(string alertType)
         {
             return AlertType == null || AlertType.Count == 0 || AlertType.Contains(alertType);
         }
 
-        private bool ServerNameMatches(string serverName)
+        public bool ServerNameMatches(string serverName)
         {
             return IncludedServers == null || IncludedServers.Count == 0 || IncludedServers.Contains(serverName);
         }
 
-        private bool GroupNameMatches(string groupName)
+        public bool GroupNameMatches(string groupName)
         {
             return IncludedGroups == null || IncludedGroups.Count == 0 || IncludedGroups.Contains(groupName);
         }
 
-        private bool InTimeRange(DateTime alertTime)
+        public bool InTimeRange(DateTime alertTime)
         {
             return ActionFrom.Equals(ActionTo) || alertTime.TimeOfDay > ActionFrom.TimeOfDay && alertTime.TimeOfDay < ActionTo.TimeOfDay;
 
         }
 
-        private bool SeverityMatches(Severity severity)
+        public bool SeverityMatches(Severity severity)
         {
             return severity >= MinimumSeverity;
         }

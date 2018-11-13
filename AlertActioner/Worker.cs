@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AlertActioner
 {
-    class Worker
+    public class Worker
     {
         private readonly BlockingCollection<AlertData> _workerQueue;
         private readonly BlockingCollection<ActionData> _actionQueue;
@@ -52,7 +52,7 @@ namespace AlertActioner
             }
         }
 
-        private string CreateSqlServerConnectionString()
+        public string CreateSqlServerConnectionString()
         {
             if (GetMachineAlert())
             {
@@ -72,12 +72,12 @@ namespace AlertActioner
             return parts[1].Contains("(local)") ? parts[1].Split('\\').First() : parts[0].TrimEnd(' ');
         }
 
-        private bool GetMachineAlert()
+        public bool GetMachineAlert()
         {
             return Alerts.MachineAlerts.Contains(_currentAlert.AlertType);
         }
 
-        private List<string> GetAdditionalObjects()
+        public List<string> GetAdditionalObjects()
         {
             var objects = new List<string>();
             foreach (var part in _currentAlert.TargetObject.Split('>').Skip(1))

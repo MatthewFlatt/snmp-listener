@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace AlertActioner
 {
-    class RulesList
+    public class RulesList
     {
         public List<Rule> Rules { get; private set; }
 
