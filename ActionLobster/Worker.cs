@@ -59,7 +59,7 @@ namespace ActionLobster
                 return "";
             }
             var parts = _currentAlert.TargetObject.Split('>');
-            if (parts[0].ToLower().Contains("(local"))
+            if (parts[0].ToLower().Contains("(local)"))
             {
                 return parts[0].Split('\\').First();
             }
@@ -82,7 +82,7 @@ namespace ActionLobster
             var objects = new List<string>();
             foreach (var part in _currentAlert.TargetObject.Split('>').Skip(1))
             {
-                if (string.IsNullOrWhiteSpace(_currentAlert.MachineName))
+                if (GetMachineAlert() || !part.Contains('\\'))
                 {
                     objects.Add(part);
                 }
