@@ -4,7 +4,7 @@ using SnmpSharpNet;
 
 namespace AlertActioner
 {
-    class AlertData
+    public class AlertData
     {
         public int AlertId { get; }
         public string AlertType { get; }

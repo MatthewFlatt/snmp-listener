@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26228.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertActioner", "AlertActioner\AlertActioner.csproj", "{09394CE6-0C51-424B-9635-1C09433AB9D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertActioner.Tests", "AlertActioner.Tests\AlertActioner.Tests.csproj", "{0ADE6F34-B4C1-48CB-ABF1-7CB7283870DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{09394CE6-0C51-424B-9635-1C09433AB9D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09394CE6-0C51-424B-9635-1C09433AB9D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09394CE6-0C51-424B-9635-1C09433AB9D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ADE6F34-B4C1-48CB-ABF1-7CB7283870DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ADE6F34-B4C1-48CB-ABF1-7CB7283870DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ADE6F34-B4C1-48CB-ABF1-7CB7283870DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ADE6F34-B4C1-48CB-ABF1-7CB7283870DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
