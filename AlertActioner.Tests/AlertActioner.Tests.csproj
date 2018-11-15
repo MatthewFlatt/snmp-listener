@@ -58,8 +58,6 @@
     <Compile Include="AlertDataTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuleTests.cs" />
-    <Compile Include="RulesListTests.cs" />
-    <Compile Include="WorkerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
