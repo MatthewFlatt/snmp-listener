@@ -9,12 +9,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 
 namespace AlertActioner
 {
     class Action
     {
         private readonly BlockingCollection<ActionData> _actionQueue;
+        private static readonly ILog Logger = LogManager.GetLogger("Action");
 
         public Action(BlockingCollection<ActionData> actionQueue)
         {
@@ -28,13 +30,13 @@ namespace AlertActioner
                 try
                 {
                     var action = _actionQueue.Take();
-                    Console.WriteLine("ACTION : Taken data from queue");
-                    Console.WriteLine("ACTION : {0}", action.AlertForAction);
-                    Console.WriteLine("ACTION : SQL Server connection string - {0}", action.SqlServerConnectionString);
-                    Console.WriteLine("ACTION : Machine alert - {0}", action.MachineAlert);
+                    Logger.Debug("ACTION : Taken data from queue");
+                    Logger.Debug($"ACTION : {action.AlertForAction}");
+                    Logger.Debug($"ACTION : SQL Server connection string - {action.SqlServerConnectionString}");
+                    Logger.Debug($"ACTION : Machine alert - {action.MachineAlert}");
                     foreach (var property in action.AdditionalObject)
                     {
-                        Console.WriteLine("ACTION : Property : {0}", property);
+                        Logger.Debug($"ACTION : Property : {property}");
                     }
 
                     using (PowerShell shell = PowerShell.Create())
@@ -65,19 +67,19 @@ namespace AlertActioner
                         shell.Invoke();
                         foreach (var result in shell.Streams.Information)
                         {
-                            Console.WriteLine("POWERSHELL : {0}", result);
+                            Logger.Info($"POWERSHELL : {result}");
                         }
 
                         foreach (var errorRecord in shell.Streams.Error)
                         {
-                            Console.WriteLine(errorRecord);
+                            Logger.Error(errorRecord);
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Error occured while attempting to run script");
-                    Console.WriteLine(e);
+                    Logger.Error("Error occured while attempting to run script");
+                    Logger.Error(e);
                 }
             }
         }

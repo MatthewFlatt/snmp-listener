@@ -4,21 +4,23 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using log4net;
+using log4net.Core;
 
 namespace AlertActioner
 {
     class Program
     {
+        private static readonly ILog Logger = LogManager.GetLogger("Main");
         static void Main(string[] args)
         {
-            //var config = new Configuration();
 
-            //
             // Show Infos
             //
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            Console.WriteLine("AlertActioner V0.0.{0}", version.Build);
-            Console.WriteLine("-------------------------");
+            Logger.Info($"AlertActioner V0.0.{version.Build}");
+            Logger.Info($"Starting at {DateTime.Now}");
+            Logger.Info("-------------------------");
             
             // Create Queues
             var alertQueue = new BlockingCollection<AlertData>();
@@ -31,8 +33,8 @@ namespace AlertActioner
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error reading rules from file");
-                Console.WriteLine(e);
+                Logger.Error("Error reading rules from file");
+                Logger.Error(e);
             }
             
             var rules = new RulesList();
@@ -62,14 +64,14 @@ namespace AlertActioner
                     SnmpData data = listener.Listen();
                     if (data != null)
                     {
-                        Console.WriteLine("Adding to queue");
+                        Logger.Debug("Adding to queue");
                         alertQueue.Add(data.AlertData);
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Error adding trap to queue");
-                    Console.WriteLine(e);
+                    Logger.Error("Error adding trap to queue");
+                    Logger.Error(e);
                 }
             }
         }

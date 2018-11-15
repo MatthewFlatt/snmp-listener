@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using log4net;
 
 namespace AlertActioner
 {
@@ -15,6 +16,7 @@ namespace AlertActioner
         private readonly BlockingCollection<ActionData> _actionQueue;
         private AlertData _currentAlert;
         private readonly RulesList _rules;
+        private static readonly ILog Logger = LogManager.GetLogger("Worker");
 
         public Worker(BlockingCollection<AlertData> queue, BlockingCollection<ActionData> actionQueue, RulesList rules)
         {
@@ -45,8 +47,8 @@ namespace AlertActioner
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("An exception occurred and the alert was dropped");
-                    Console.WriteLine(e);
+                    Logger.Error("An exception occurred and the alert was dropped");
+                    Logger.Error(e);
                 }
 
             }
@@ -55,6 +57,11 @@ namespace AlertActioner
         public string CreateSqlServerConnectionString()
         {
             if (GetMachineAlert())
+            {
+                return "";
+            }
+
+            if (_currentAlert.TargetObject == null)
             {
                 return "";
             }
@@ -80,6 +87,10 @@ namespace AlertActioner
         public List<string> GetAdditionalObjects()
         {
             var objects = new List<string>();
+            if (_currentAlert.TargetObject == null)
+            {
+                return objects;
+            }
             foreach (var part in _currentAlert.TargetObject.Split('>').Skip(1))
             {
                 if (GetMachineAlert() || !part.Contains('\\'))

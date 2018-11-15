@@ -4,6 +4,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 using Newtonsoft.Json;
 
 namespace AlertActioner
@@ -11,6 +12,7 @@ namespace AlertActioner
     public class RulesList
     {
         public List<Rule> Rules { get; private set; }
+        private static readonly ILog Logger = LogManager.GetLogger("Main");
 
         public void UpdateRules(string json)
         {
@@ -20,8 +22,8 @@ namespace AlertActioner
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error updating rules");
-                Console.WriteLine(e);
+                Logger.Error("Error updating rules");
+                Logger.Error(e);
             }
             
         }
