@@ -1,12 +1,7 @@
 AlertActioner/bin
 AlertActioner/obj
-
 .vs
-
 packages
 AlertActioner.Tests/bin
 AlertActioner.Tests/obj
-AlertActioner/bin/Debug/AlertActioner.exe
-AlertActioner/bin/Debug/AlertActioner.pdb
-AlertActioner/obj/Debug
 AlertActioner.sln.DotSettings.user
