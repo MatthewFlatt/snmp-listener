@@ -15,7 +15,7 @@ namespace AlertActioner.Tests
             Assert.IsTrue(ruleToTest.AlertTypeMatches("Database unavailable"));
 
             // Matches types in rule
-            ruleToTest.AlertType = new List<string> {"Database unavailable", "Job Failed"};
+            ruleToTest.AlertType = new List<string> {"Database unavailable", "Job failed"};
             Assert.IsTrue(ruleToTest.AlertTypeMatches("Database unavailable"));
             Assert.IsTrue(ruleToTest.AlertTypeMatches("Job failed"));
 
@@ -31,7 +31,7 @@ namespace AlertActioner.Tests
             Assert.IsTrue(ruleToTest.ServerNameMatches("server1"));
 
             // Matches servers in rule
-            ruleToTest.AlertType = new List<string> { "server1", "server3" };
+            ruleToTest.IncludedServers = new List<string> { "server1", "server3" };
             Assert.IsTrue(ruleToTest.ServerNameMatches("server1"));
             Assert.IsTrue(ruleToTest.ServerNameMatches("server3"));
 
@@ -44,15 +44,16 @@ namespace AlertActioner.Tests
         {
             var ruleToTest = new Rule { IncludedGroups = new List<string>() };
             // No rule specified should return true
-            Assert.IsTrue(ruleToTest.GroupNameMatches("group1"));
+            Assert.IsTrue(ruleToTest.GroupNameMatches(new List<string> {"group1"}));
 
-            // Matches types in rule
-            ruleToTest.AlertType = new List<string> { "group1", "group3" };
-            Assert.IsTrue(ruleToTest.GroupNameMatches("group1"));
-            Assert.IsTrue(ruleToTest.GroupNameMatches("group3"));
+            // 1 group matches in rule
+            ruleToTest.IncludedGroups = new List<string> { "group1", "group3" };
+            Assert.IsTrue(ruleToTest.GroupNameMatches(new List<string> { "group1" }));
+            Assert.IsTrue(ruleToTest.GroupNameMatches(new List<string> { "group3" }));
+            Assert.IsTrue(ruleToTest.GroupNameMatches(new List<string> { "group2","group3" }));
 
             // Does not match
-            Assert.IsFalse(ruleToTest.GroupNameMatches("group2"));
+            Assert.IsFalse(ruleToTest.GroupNameMatches(new List<string> { "group2" }));
         }
 
         [Test]
@@ -79,7 +80,7 @@ namespace AlertActioner.Tests
         [Test]
         public void SeverityMatchTests()
         {
-            var ruleToTest = new Rule { };
+            var ruleToTest = new Rule { MinimumSeverity = Severity.Unknown};
             // No rule specified should return true
             Assert.IsTrue(ruleToTest.SeverityMatches(Severity.Unknown));
 

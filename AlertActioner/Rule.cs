@@ -24,9 +24,20 @@ namespace AlertActioner
             return IncludedServers == null || IncludedServers.Count == 0 || IncludedServers.Contains(serverName);
         }
 
-        public bool GroupNameMatches(string groupName)
+        public bool GroupNameMatches(List<string> groupNames)
         {
-            return IncludedGroups == null || IncludedGroups.Count == 0 || IncludedGroups.Contains(groupName);
+            if (IncludedGroups == null || IncludedGroups.Count == 0)
+            {
+                return true;
+            }
+            foreach (var groupName in groupNames)
+            {
+                if (IncludedGroups.Contains(groupName))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public bool InTimeRange(DateTime alertTime)
@@ -40,9 +51,9 @@ namespace AlertActioner
             return severity >= MinimumSeverity;
         }
 
-        public bool RuleMatches(string alertType, string serverName, string groupName, DateTime alertTime, Severity severity)
+        public bool RuleMatches(string alertType, string serverName, List<string> groupNames, DateTime alertTime, Severity severity)
         {
-            return AlertTypeMatches(alertType) && ServerNameMatches(serverName) && GroupNameMatches(groupName) &&
+            return AlertTypeMatches(alertType) && ServerNameMatches(serverName) && GroupNameMatches(groupNames) &&
                    InTimeRange(alertTime) && SeverityMatches(severity);
         }
 

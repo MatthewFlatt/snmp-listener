@@ -34,7 +34,7 @@ namespace AlertActioner
             foreach (var rule in Rules)
             {
                 if (rule.RuleMatches(data.AlertType, data.ClusterName,
-                    data.GroupName,
+                    data.GroupNames,
                     data.EventTime, data.CurrentSeverity))
                 {
                     if (matchingRules.Count == 0)

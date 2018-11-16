@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SnmpSharpNet;
 
@@ -17,7 +18,7 @@ namespace AlertActioner
         public Severity PreviousWorstSeverity { get; }
         public string MachineName { get; }
         public string ClusterName { get; }
-        public string GroupName { get; }
+        public List<string> GroupNames { get; }
 
         public AlertData(Pdu snmpData)
         {
@@ -60,7 +61,7 @@ namespace AlertActioner
                         ClusterName = value.Value.ToString();
                         break;
                     case 12:
-                        GroupName = value.Value.ToString();
+                        GroupNames = GetGroupNames(value.Value.ToString());
                         break;
                 }
                 
@@ -76,7 +77,7 @@ namespace AlertActioner
         public override string ToString()
         {
             return
-                $"AlertId : {AlertId}{Environment.NewLine}AlertType : {AlertType}{Environment.NewLine}AlertDescription : {AlertDescription}{Environment.NewLine}EventTime : {EventTime}{Environment.NewLine}CurrentServerity : {CurrentSeverity}{Environment.NewLine}TargetObject : {TargetObject}{Environment.NewLine}DetailsUrl : {DetailsUrl}{Environment.NewLine}StatusChangeType{StatusChangeType}{Environment.NewLine}PreviousWorstSeverity : {PreviousWorstSeverity}{Environment.NewLine}MachineName : {MachineName}{Environment.NewLine}ClusterName : {ClusterName}{Environment.NewLine}GroupName : {GroupName}";
+                $"AlertId : {AlertId}{Environment.NewLine}AlertType : {AlertType}{Environment.NewLine}AlertDescription : {AlertDescription}{Environment.NewLine}EventTime : {EventTime}{Environment.NewLine}CurrentServerity : {CurrentSeverity}{Environment.NewLine}TargetObject : {TargetObject}{Environment.NewLine}DetailsUrl : {DetailsUrl}{Environment.NewLine}StatusChangeType{StatusChangeType}{Environment.NewLine}PreviousWorstSeverity : {PreviousWorstSeverity}{Environment.NewLine}MachineName : {MachineName}{Environment.NewLine}ClusterName : {ClusterName}{Environment.NewLine}GroupName : {GroupNames}";
         }
 
         public Severity StringToSeverity(string severity)
@@ -111,6 +112,18 @@ namespace AlertActioner
                 default:
                     return Status.Unknown;
             }
+        }
+
+        public List<string> GetGroupNames(string group)
+        {
+            var groups = new List<string>();
+            if (string.IsNullOrEmpty(group))
+            {
+                return groups;
+            }
+            var parts = group.Split('.');
+            groups.AddRange(parts.Select(part => part.Trim('[', ']')));
+            return groups;
         }
     }
 }
