@@ -13,7 +13,7 @@ namespace AlertActioner
     class ComponentStartup
     {
         private static readonly ILog Logger = LogManager.GetLogger("Component startup");
-        public void Run()
+        public void Start()
         {
             // Create Queues
             var alertQueue = new BlockingCollection<AlertData>();

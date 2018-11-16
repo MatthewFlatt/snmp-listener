@@ -5,17 +5,17 @@ using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Channels;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using log4net;
-using log4net.Repository.Hierarchy;
 
 namespace AlertActioner
 {
     public partial class AlertActionerService : ServiceBase
     {
-        private ComponentStartup _componentStartup;
         private static readonly ILog Logger = LogManager.GetLogger("Main");
 
         public AlertActionerService()
@@ -29,18 +29,24 @@ namespace AlertActioner
             Logger.Info($"AlertActioner V0.0.{version.Build}");
             Logger.Info($"Starting at {DateTime.Now}");
             Logger.Info("-------------------------");
-            _componentStartup = new ComponentStartup();
-            _componentStartup.Run();
+            new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+                var componentStartup = new ComponentStartup();
+                componentStartup.Start();
+            }).Start();
         }
 
         public void RunAsConsole(string[] args)
         {
             OnStart(args);
+            Console.ReadLine();
+            OnStop();
         }
 
         protected override void OnStop()
         {
-            _componentStartup.Dispose();
+
         }
 
     }
