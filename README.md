@@ -20,3 +20,5 @@ Example rule:
  Fields can be blank or removed to include all, only matching rules with the highest value in Priority will result in the PS script being run.
  
  Use InstallAlertActionerService to install as a Windows service, replacing the username
+ 
+ PowerShell files to run must be in the root directory of where the app is running.
