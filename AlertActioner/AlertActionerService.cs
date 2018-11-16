@@ -46,7 +46,7 @@ namespace AlertActioner
 
         protected override void OnStop()
         {
-
+            Logger.Info("Shutting down");
         }
 
     }
