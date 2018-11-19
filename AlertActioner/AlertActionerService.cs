@@ -29,6 +29,7 @@ namespace AlertActioner
             Logger.Info($"AlertActioner V0.0.{version.Build}");
             Logger.Info($"Starting at {DateTime.Now}");
             Logger.Info("-------------------------");
+
             new Thread(() =>
             {
                 Thread.CurrentThread.IsBackground = true;
