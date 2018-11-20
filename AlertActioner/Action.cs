@@ -55,7 +55,7 @@ namespace AlertActioner
                         sb.Append($" -PreviousWorstSeverity \"{action.AlertForAction.PreviousWorstSeverity}\"");
                         sb.Append($" -MachineName \"{action.AlertForAction.MachineName}\"");
                         sb.Append($" -ClusterName \"{action.AlertForAction.ClusterName}\"");
-                        sb.Append($" -GroupName \"{action.AlertForAction.GroupNames}\"");
+                        sb.Append($" -GroupName \"{action.AlertForAction.GroupNamesToSingleString()}\"");
                         sb.Append($" -SqlServerConnectionString \"{action.SqlServerConnectionString}\"");
 
                         if (action.AdditionalObject.Count > 0)

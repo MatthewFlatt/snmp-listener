@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using SnmpSharpNet;
 
 namespace AlertActioner
@@ -77,7 +78,7 @@ namespace AlertActioner
         public override string ToString()
         {
             return
-                $"AlertId : {AlertId}{Environment.NewLine}AlertType : {AlertType}{Environment.NewLine}AlertDescription : {AlertDescription}{Environment.NewLine}EventTime : {EventTime}{Environment.NewLine}CurrentServerity : {CurrentSeverity}{Environment.NewLine}TargetObject : {TargetObject}{Environment.NewLine}DetailsUrl : {DetailsUrl}{Environment.NewLine}StatusChangeType{StatusChangeType}{Environment.NewLine}PreviousWorstSeverity : {PreviousWorstSeverity}{Environment.NewLine}MachineName : {MachineName}{Environment.NewLine}ClusterName : {ClusterName}{Environment.NewLine}GroupName : {GroupNames}";
+                $"AlertId : {AlertId}{Environment.NewLine}AlertType : {AlertType}{Environment.NewLine}AlertDescription : {AlertDescription}{Environment.NewLine}EventTime : {EventTime}{Environment.NewLine}CurrentServerity : {CurrentSeverity}{Environment.NewLine}TargetObject : {TargetObject}{Environment.NewLine}DetailsUrl : {DetailsUrl}{Environment.NewLine}StatusChangeType{StatusChangeType}{Environment.NewLine}PreviousWorstSeverity : {PreviousWorstSeverity}{Environment.NewLine}MachineName : {MachineName}{Environment.NewLine}ClusterName : {ClusterName}{Environment.NewLine}GroupName : {GroupNamesToSingleString()}";
         }
 
         public Severity StringToSeverity(string severity)
@@ -124,6 +125,18 @@ namespace AlertActioner
             var parts = group.Split('.');
             groups.AddRange(parts.Select(part => part.Trim('[', ']')));
             return groups;
+        }
+
+        public string GroupNamesToSingleString()
+        {
+            var sb = new StringBuilder();
+            foreach (var groupName in GroupNames)
+            {
+                sb.Append(groupName);
+                sb.Append(",");
+            }
+
+            return sb.ToString().TrimEnd(',');
         }
     }
 }
