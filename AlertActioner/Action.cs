@@ -62,10 +62,11 @@ namespace AlertActioner
                         {
                             sb.Append($" -ObjectName \"{action.AdditionalObject.First()}\"");
                         }
+                        sb.Append(" -Verbose");
 
                         shell.AddScript(sb.ToString());
                         shell.Invoke();
-                        foreach (var result in shell.Streams.Information)
+                        foreach (var result in shell.Streams.Verbose)
                         {
                             Logger.Info($"POWERSHELL : {result}");
                         }

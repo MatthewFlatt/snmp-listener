@@ -43,6 +43,7 @@ param (
     $GroupName
 )
 
-Write-Host "Alert ID : $AlertId"
-Write-Host "Sql Server connection string : $SqlServerConnectionString"
-Write-Host "Object name : $ObjectName"
+Write-Verbose "Alert ID : $AlertId"
+Write-Verbose "Sql Server connection string : $SqlServerConnectionString"
+Write-Verbose "Object name : $ObjectName"
+Write-Output "Object name : $ObjectName"
