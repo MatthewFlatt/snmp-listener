@@ -43,7 +43,7 @@ namespace AlertActioner
                     {
                         var sb = new StringBuilder();
                         shell.Commands.AddScript("Set-ExecutionPolicy -ExecutionPolicy ByPass -Scope Process -Force");
-                        sb.Append(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, action.ScriptToRun));
+                        sb.Append($"\" {Path.Combine(AppDomain.CurrentDomain.BaseDirectory, action.ScriptToRun)}\"");
                         sb.Append($" -AlertId \"{action.AlertForAction.AlertId}\"");
                         sb.Append($" -AlertType \"{action.AlertForAction.AlertType}\"");
                         sb.Append($" -AlertDescription \"{action.AlertForAction.AlertDescription}\"");
