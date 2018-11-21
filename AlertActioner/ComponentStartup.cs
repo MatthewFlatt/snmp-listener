@@ -22,12 +22,13 @@ namespace AlertActioner
             try
             {
                 jsonRules =
-                    File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ExampleRules.json"));
+                    File.ReadAllText(ConfigurationHandler.GetRulesFileLocation());
             }
             catch (Exception e)
             {
-                Logger.Error("Error reading rules from file");
+                Logger.Error("Error reading rules from file, shutting down");
                 Logger.Error(e);
+                throw;
             }
 
             var rules = new RulesList();
@@ -68,11 +69,6 @@ namespace AlertActioner
                     Logger.Error(e);
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            // Kill threads
         }
     }
 }

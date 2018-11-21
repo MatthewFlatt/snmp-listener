@@ -48,6 +48,7 @@
       <HintPath>..\packages\SnmpSharpNet.0.9.5\lib\SnmpSharpNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Management.Automation.dll.10.0.10586.0\lib\net40\System.Management.Automation.dll</HintPath>
@@ -61,8 +62,9 @@
     <Compile Include="ActionData.cs" />
     <Compile Include="AlertData.cs" />
     <Compile Include="Alerts.cs" />
+    <Compile Include="RulesFileSection.cs" />
     <Compile Include="ComponentStartup.cs" />
-    <Compile Include="Configuration.cs" />
+    <Compile Include="ConfigurationHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rule.cs" />
@@ -81,12 +83,6 @@
     <Compile Include="Worker.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="settings.conf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="default.conf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <None Include="App.config" />
     <None Include="ExampleRules.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
