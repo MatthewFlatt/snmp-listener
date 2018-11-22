@@ -67,6 +67,11 @@ namespace AlertActioner
                 }
                 
             }
+
+            if (string.IsNullOrWhiteSpace(MachineName))
+            {
+                MachineName = ClusterName;
+            }
         }
 
         private int GetId(string oid)
