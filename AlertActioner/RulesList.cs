@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
@@ -14,18 +15,31 @@ namespace AlertActioner
         public List<Rule> Rules { get; private set; }
         private static readonly ILog Logger = LogManager.GetLogger("Main");
 
-        public void UpdateRules(string json)
+        public void UpdateRules(List<string> ruleFiles)
         {
-            try
+            var allRules = new List<Rule>();
+            foreach (var ruleFileLocation in ruleFiles)
             {
-                Rules = JsonConvert.DeserializeObject<List<Rule>>(json);
+                try
+                {
+                    var json = File.ReadAllText(ruleFileLocation);
+                    var rules = JsonConvert.DeserializeObject<List<Rule>>(json);
+                    allRules = allRules.Concat(rules).ToList();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error($"Error updating rules from file {ruleFileLocation}");
+                    Logger.Error(e);
+                }
             }
-            catch (Exception e)
+
+            if (allRules.Count == 0)
             {
-                Logger.Error("Error updating rules");
-                Logger.Error(e);
+                Logger.Error("Unable to load any rules file, shutting down");
+                throw new Exception("Unable to load any rules file, shutting down");
             }
-            
+
+            Rules = allRules;
         }
 
         public List<Rule> GetMatchingRules(AlertData data)

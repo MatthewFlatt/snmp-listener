@@ -18,21 +18,10 @@ namespace AlertActioner
             // Create Queues
             var alertQueue = new BlockingCollection<AlertData>();
             var actionQueue = new BlockingCollection<ActionData>();
-            var jsonRules = "";
-            try
-            {
-                jsonRules =
-                    File.ReadAllText(ConfigurationHandler.GetRulesFileLocation());
-            }
-            catch (Exception e)
-            {
-                Logger.Error("Error reading rules from file, shutting down");
-                Logger.Error(e);
-                throw;
-            }
+            
 
             var rules = new RulesList();
-            rules.UpdateRules(jsonRules);
+            rules.UpdateRules(ConfigurationHandler.GetRulesFileLocation());
 
             new Thread(() =>
             {
