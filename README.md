@@ -1,6 +1,6 @@
 # Windows service to listen for SQL Monitor alerts via SNMP trap and run a PowerShell script controlled via rules.
 
-Rules read from ExampleRules.json in the root directory of where the exe is running.
+Rules read from json files configured in AlertActioner.exe.config. Can have multiple files seperated by comma.
 
 Example rule:
 
