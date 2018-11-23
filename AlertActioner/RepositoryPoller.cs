@@ -25,7 +25,7 @@ namespace AlertActioner
             var alerts = new List<AlertData>();
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                var query = $"";
+                var query = $"SELECT a.AlertId , at.ShortName , at.Description , a.TargetObject , a.Raised , a.ClearedDate , a.WorstSeverity , a.LastSeverity FROM   alert.Alert AS a\r\n       JOIN alert.Alert_Type AS at ON at.AlertType = a.AlertType\r\nWHERE  a.ClearedDate > @lastPoll;";
             }
             return alerts;
         }
