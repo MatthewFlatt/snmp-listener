@@ -74,6 +74,34 @@ namespace AlertActioner
             }
         }
 
+        public AlertData(object[] values)
+        {
+            AlertId = Int32.Parse(values[0].ToString());
+
+            AlertType = values[1].ToString();
+
+            AlertDescription = values[2].ToString();
+
+            EventTime = DateTime.Parse(values[3].ToString());
+
+            CurrentSeverity = (Severity) Int32.Parse(values[4].ToString());
+
+            StatusChangeType = Status.Cleared;
+
+            PreviousWorstSeverity = (Severity) Int32.Parse(values[5].ToString());
+
+            var targetObject = ConvertSqlTargetObject(values[6].ToString());
+
+            targetObject.TryGetValue("targetObject", out var newTarget);
+            TargetObject = newTarget;
+            targetObject.TryGetValue("machine", out var machine);
+            MachineName = machine;
+            targetObject.TryGetValue("cluster", out var cluster);
+            ClusterName = cluster;
+
+            GroupNames = GetGroupNames(ClusterName);  
+        }
+
         private int GetId(string oid)
         {
             var parts = oid.Split('.');
@@ -142,6 +170,12 @@ namespace AlertActioner
             }
 
             return sb.ToString().TrimEnd(',');
+        }
+
+        public Dictionary<string, string> ConvertSqlTargetObject(string sqlObject)
+        {
+            var targetObject = new Dictionary<string,string>();
+            return targetObject;
         }
     }
 }

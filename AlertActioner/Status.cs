@@ -11,7 +11,8 @@ namespace AlertActioner
         Unknown = -1,
         Ended = 0,
         Raised = 1,
-        Escalated = 2
+        Escalated = 2,
+        Cleared = 3
     }
 
 }
