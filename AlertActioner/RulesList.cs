@@ -49,7 +49,7 @@ namespace AlertActioner
             {
                 if (rule.RuleMatches(data.AlertType, data.ClusterName,
                     data.GroupNames,
-                    data.EventTime, data.CurrentSeverity))
+                    data.EventTime, data.StatusChangeType == Status.Ended ? data.PreviousWorstSeverity : data.CurrentSeverity))
                 {
                     if (matchingRules.Count == 0)
                     {
