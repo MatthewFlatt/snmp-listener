@@ -62,6 +62,7 @@
     <Compile Include="ActionData.cs" />
     <Compile Include="AlertData.cs" />
     <Compile Include="Alerts.cs" />
+    <Compile Include="RepositoryPoller.cs" />
     <Compile Include="RulesFileSection.cs" />
     <Compile Include="ComponentStartup.cs" />
     <Compile Include="ConfigurationHandler.cs" />
