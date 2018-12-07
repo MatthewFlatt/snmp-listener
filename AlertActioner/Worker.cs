@@ -87,17 +87,25 @@ namespace AlertActioner
         public List<string> GetAdditionalObjects()
         {
             var objects = new List<string>();
-            if (_currentAlert.TargetObject == null)
+            if (_currentAlert.TargetObject == null && string.IsNullOrWhiteSpace(_currentAlert.AdditionalInformation))
             {
                 return objects;
             }
-            foreach (var part in _currentAlert.TargetObject.Split('>').Skip(1))
+
+            if (_currentAlert.TargetObject != null)
             {
-                if (GetMachineAlert() || !part.Contains('\\'))
+                foreach (var part in _currentAlert.TargetObject.Split('>').Skip(1))
                 {
-                    objects.Add(part);
+                    if (GetMachineAlert() || !part.Contains('\\'))
+                    {
+                        objects.Add(part);
+                    }
                 }
             }
+
+            if (_currentAlert.AdditionalInformation == null) return objects;
+            objects.AddRange(_currentAlert.AdditionalInformation.Split(','));
+
             return objects;
         }
     }

@@ -20,6 +20,7 @@ namespace AlertActioner
         public string MachineName { get; }
         public string ClusterName { get; }
         public List<string> GroupNames { get; }
+        public string AdditionalInformation { get; }
 
         public AlertData(Pdu snmpData)
         {
@@ -63,6 +64,9 @@ namespace AlertActioner
                         break;
                     case 12:
                         GroupNames = GetGroupNames(value.Value.ToString());
+                        break;
+                    case 13:
+                        AdditionalInformation = value.Value.ToString();
                         break;
                 }
                 
